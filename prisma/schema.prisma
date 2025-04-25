@@ -7,9 +7,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Post {
-  id      String   @id @default(cuid())
-  title   String
-  content String
-  createdAt DateTime @default(now())
+model User {
+  id               String   @id 
+  email            String   @unique
+  isSubscribed     Boolean  @default(false)
+  subscriptionEnds DateTime
+  todos            Todo[]
 }
+
+model Todo {
+  id        String   @id @default(cuid())
+  title     String
+  completed Boolean  @default(false)
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  createdAt DateTime @default(now())
+  updateAt  DateTime @updatedAt
+}
+
