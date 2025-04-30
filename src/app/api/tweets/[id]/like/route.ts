@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 
 export async function POST(
   req: Request,
-  { params }: { params: { tweetId: string } }
+  { params }: { params: { id: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -19,7 +19,7 @@ export async function POST(
       );
     }
 
-    const { tweetId } = params;
+    const tweetId = params.id;
 
     // Check if the tweet exists
     const tweet = await prisma.tweet.findUnique({

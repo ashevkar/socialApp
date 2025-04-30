@@ -2,13 +2,13 @@
 
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 
-export default function CreateTweet() {
+export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () => void }) {
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
-  const router = useRouter();
+  // const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,7 +29,7 @@ export default function CreateTweet() {
       }
 
       setContent('');
-      router.refresh();
+      if (onTweetCreated) onTweetCreated(); // <-- this updates the feed!
     } catch (error) {
       console.error('Error creating tweet:', error);
     } finally {
@@ -58,6 +58,7 @@ export default function CreateTweet() {
           </button>
         </div>
       </form>
+      
     </div>
   );
 } 

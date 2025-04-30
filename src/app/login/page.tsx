@@ -29,6 +29,8 @@ export default function LoginPage() {
 
       router.push('/');
     } catch (error) {
+      console.log(error);
+      
       setError('An error occurred. Please try again.');
     }
   };
