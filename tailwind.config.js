@@ -9,7 +9,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        display: ['"Bangers"', 'sans-serif'],  // Add Bangers as display font
+        // display: ['"Bangers"', 'sans-serif'], 
+                // Add Bangers as display font
       },
     },
   },

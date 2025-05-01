@@ -1,6 +1,7 @@
 "use client";
 import { VscAccount } from "react-icons/vsc";
 import { useEffect, useState } from "react";
+import LoadingPage from "./LoadingPage";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState({
@@ -51,12 +52,17 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div>
+    <LoadingPage/>
+  </div>;
 
   return (
-    <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded-2xl border-4 border-black shadow-lg">
-      <div className="flex items-center space-x-4 mb-6">
-        {profile.profileImage ? (
+    <div className="font-sans font-bold m-4 p-6 bg-white rounded-2xl text-black shadow-lg">
+        <h1 className="text-3xl font-black italic mb-2">SETTINGS</h1>
+        <p className="text-lg text-gray-500 mb-6"> Customize your Orkut experience!</p>
+      <div className="flex items-center space-x-4 mb-6 mt-6">
+        
+        {/* {profile.profileImage ? (
           <img
             src={profile.profileImage}
             alt="Profile"
@@ -66,7 +72,10 @@ export default function ProfilePage() {
           <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center border-2 border-black text-4xl">
             <VscAccount />
           </div>
-        )}
+        )} */}
+        <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center border-2 border-black text-4xl">
+            <VscAccount />
+          </div>
         <div>
           <h2 className="text-2xl font-bold">{profile.name}</h2>
           <p className="text-gray-600">@{profile.username}</p>
@@ -81,7 +90,7 @@ export default function ProfilePage() {
         <p className="text-gray-700">{profile.email}</p>
       </div>
       <button
-        className="w-50 rounded-xl p-2 bg-blue-500 text-amber-50 border-r-6 border-b-6  hover:bg-blue-950-400  border-black hover:border-r-4 hover:border-b-4 duration-300"
+        className="w-50 rounded-xl p-2  custom-border  hover:bg-blue-500  "
         onClick={() => setShowPasswordForm(true)}
       >
         Change Password
@@ -117,13 +126,13 @@ export default function ProfilePage() {
           </div>
           <div className="flex justify-between pt-2">
           <button
-        className="w-50 rounded-xl p-2  border-r-6 border-b-6 pl-3 hover:bg-green-500 border  border-black hover:border-r-4 hover:border-b-4 hover:text-amber-50 duration-300"
+        className="custom-border w-50 p-2 pl-3 hover:bg-green-500 "
         onClick={handlePasswordChange}
           >
             Save Password
           </button>
           <button
-        className="w-50 rounded-xl p-2 border-r-6 border-b-6 border hover:bg-zinc-500 border-black hover:border-r-4 hover:border-b-4 hover:text-amber-50 duration-300"
+        className="custom-border w-50  p-2  hover:bg-zinc-500 "
         onClick={() => setShowPasswordForm(false)}
           >
             Cancel

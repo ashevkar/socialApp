@@ -10,14 +10,15 @@ type SessionUserWithId = {
   image?: string | null;
 };
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
   const session = await getServerSession(authOptions);
 
   if (!session) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const tweet = await prisma.tweet.findUnique({ where: { id: params.id } });
+  const tweet = await prisma.tweet.findUnique({ where: { id } });
   if (!tweet) {
     return NextResponse.json({ error: "Tweet not found" }, { status: 404 });
   }
@@ -30,8 +31,8 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   }
 
   // Delete all likes associated with the tweet before deleting the tweet
-  await prisma.like.deleteMany({ where: { tweetId: params.id } });
-//   await prisma.tweet.delete({ where: { id: params.id } });
+  await prisma.like.deleteMany({ where: { tweetId: id } });
+  await prisma.tweet.delete({ where: { id } });
   return NextResponse.json({ success: true });
 }
 

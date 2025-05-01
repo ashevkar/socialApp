@@ -27,3 +27,31 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+.custom-border {
+  @apply border-r-6 border-b-6 border-2 rounded-xl border-black duration-300;
+  
+}
+.custom-border:hover {
+  @apply border-r-4 border-b-4 text-amber-50;
+}
+
+/* LoadingIcon.css */
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.loading-spinner {
+  width: 48px;
+  height: 48px;
+  color: #3b82f6; 
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

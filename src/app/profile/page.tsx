@@ -1,8 +1,8 @@
 "use client";
 import { VscAccount } from "react-icons/vsc";
 import { useEffect, useState } from "react";
-import { IoMdColorWand } from "react-icons/io";
-
+import LoadingPage from "@/components/LoadingPage";
+// import { IoMdColorWand } from "react-icons/io";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState({
@@ -31,16 +31,16 @@ export default function ProfilePage() {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      // For demo: just show preview, for production: upload to server or cloud storage
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        setProfile({ ...profile, profileImage: ev.target?.result as string });
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
+  // const handleImageChange = (e) => {
+  //   if (e.target.files && e.target.files[0]) {
+  //     // For demo: just show preview, for production: upload to server or cloud storage
+  //     const reader = new FileReader();
+  //     reader.onload = (ev) => {
+  //       setProfile({ ...profile, profileImage: ev.target?.result as string });
+  //     };
+  //     reader.readAsDataURL(e.target.files[0]);
+  //   }
+  // };
 
   const handleSave = async () => {
     const res = await fetch("/api/profile", {
@@ -56,12 +56,12 @@ export default function ProfilePage() {
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div><LoadingPage/></div>;
 
   return (
-    <div className=" items-center  rounded-xl p-5 bg-white   border-r-7 border-b-7  border-2 border-black  ">
-      <h2 className="text-2xl font-bold mb-4">Setting</h2>
-      <p className="text-zinc-600 text-sm"> Customize your Orkut experience!</p>
+    <div className="font-sans font-bold items-center  rounded-xl p-6 m-4 border-black text-black bg-white ">
+      <h1 className="text-3xl font-black italic mb-2">PROFILE</h1>
+      <p className="text-lg text-gray-500 mb-6"> Customize your Orkut experience!</p>
       {/* <div className="mb-4">
         <label className="block mb-1">Profile Image</label>
         <input
@@ -79,12 +79,12 @@ export default function ProfilePage() {
         )}
       </div> */}
       <div className="border-4 rounded-2xl p-4 mt-2 pb-5 ">
-        <div className="flex p-3 gap-3 items-center font-extrabold font-display">
+        <div className="flex p-3 gap-3 items-center  font-black">
           <div>
             <VscAccount className="text-3xl text-rose-500" />
           </div>
           <div>
-            <p>ACCOUNT</p>
+            <h1 className="font-black text-xl italic">ACCOUNT</h1>
           </div>
         </div>
         <div className="mb-4 m-2">
@@ -128,21 +128,21 @@ export default function ProfilePage() {
         </div>
         {edit ? (
           <button
-            className="flex items-center gap-4 w-full rounded-xl p-2 bg-rose-500 text-amber-50 border-black border-r-6 border-b-6 hover:border-r-3 hover:border-b-3 duration-300 justify-center mb-3"
+            className="custom-border flex items-center gap-4 w-full p-2 bg-blue-500 text-amber-50 justify-center mb-3"
             onClick={handleSave}
           >
             Save
           </button>
         ) : (
           <button
-          className="flex items-center gap-4 w-full rounded-xl p-2 border-2 hover:bg-blue-500 hover:text-amber-50 text-black border-black border-r-6 border-b-6 hover:border-r-3 hover:border-b-3 duration-300 justify-center mb-3"
-          onClick={() => setEdit(true)}
+            className="custom-border flex items-center gap-4 w-full p-2 text-black  justify-center mb-3"
+            onClick={() => setEdit(true)}
           >
             Edit
           </button>
         )}
       </div>
-      <div className="border-4 rounded-2xl p-2 mt-2 ">
+      {/* <div className="border-4 rounded-2xl p-2 mt-2 ">
         <div className="flex p-3 gap-3 items-center font-extrabold font-display">
         <div>
             <IoMdColorWand
@@ -152,8 +152,7 @@ export default function ProfilePage() {
             <p>APPEARANCE</p>
           </div>
           </div>
-          </div>
-
+          </div> */}
     </div>
   );
 }

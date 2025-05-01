@@ -6,6 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { FaTrash } from "react-icons/fa";
+import LoadingPage from "./LoadingPage";
 
 type Tweet = {
   id: string;
@@ -104,17 +105,19 @@ export default function TweetFeed() {
   };
 
   if (isLoading) {
-    return <div className="text-center py-4">Loading tweets...</div>;
+    return <div className="text-center py-4">
+        <LoadingPage />          
+    </div>;
   }
 
   return (
     <div className="space-y-4">
       {tweets.map((tweet) => (
-        <div key={tweet.id} className="bg-white rounded-lg shadow p-4 relative">
+        <div key={tweet.id} className="custom-border bg-white rounded-lg shadow p-4 relative">
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0">
               <Image
-                src={tweet.author.profileImage || "/default-avatar.png"}
+                src={tweet.author.profileImage || "/default-avatar.jpg"}
                 alt={tweet.author.name}
                 width={40}
                 height={40}
