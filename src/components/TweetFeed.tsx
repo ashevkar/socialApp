@@ -33,7 +33,7 @@ type Tweet = {
   }[];
 };
 
-export default function TweetFeed() {
+export default function TweetFeed({ tab }: { tab: 'popular' | 'mySeries' }) {
   // console.log('TweetFeed mounted');
 
   const [tweets, setTweets] = useState<Tweet[]>([]);
@@ -62,7 +62,8 @@ export default function TweetFeed() {
   }, []);
 
   const handleLike = async (tweetId: string) => {
-    if (!session) return;
+    const userId = (session?.user as { id?: string })?.id;
+    if (!session || !userId) return;
 
     try {
       const res = await fetch(`/api/tweets/${tweetId}/like`, {
@@ -76,13 +77,13 @@ export default function TweetFeed() {
       const updatedTweets = tweets.map((tweet) => {
         if (tweet.id === tweetId) {
           const isLiked = tweet.likes.some(
-            (like) => like.userId === session.user.id
+            (like) => like.userId === userId
           );
           return {
             ...tweet,
             likes: isLiked
-              ? tweet.likes.filter((like) => like.userId !== session.user.id)
-              : [...tweet.likes, { id: "temp", userId: session.user.id }],
+              ? tweet.likes.filter((like) => like.userId !== userId)
+              : [...tweet.likes, { id: "temp", userId }],
           };
         }
         return tweet;
@@ -110,10 +111,18 @@ export default function TweetFeed() {
     </div>;
   }
 
+  const userId = (session?.user as { id?: string })?.id;
+  let displayedTweets = tweets;
+  if (tab === 'mySeries' && userId) {
+    displayedTweets = tweets.filter(tweet => tweet.author.id === userId);
+  } else if (tab === 'popular') {
+    displayedTweets = [...tweets].sort((a, b) => b.likes.length - a.likes.length);
+  }
+
   return (
     <div className="space-y-4">
-      {tweets.map((tweet) => (
-        <div key={tweet.id} className="custom-border bg-white rounded-lg shadow p-4 relative">
+      {displayedTweets.map((tweet) => (
+        <div key={tweet.id} className="custom-outline bg-white rounded-lg shadow p-4 relative">
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0">
               <Image
@@ -125,11 +134,11 @@ export default function TweetFeed() {
               />
             </div>
             <div className="flex-1 text-gray-500">
-              <div className="flex justify-between items-center space-x-1">
-                <span className="font-semibold">{tweet.author.name}</span>
-                {/* <span className="">@{tweet.author.username}</span> */}
-                <span className=""></span>
-                <span className="">
+              <div className="flex items-center space-x-1">
+                <span className="font-bold text-xl text-black">{tweet.author.name.charAt(0).toUpperCase() + tweet.author.name.slice(1)}</span>
+                <span className="text-sm">@{tweet.author.username}</span>
+                <span className="">-</span>
+                <span className="text-sm">
                   {formatDistanceToNow(new Date(tweet.createdAt), {
                     addSuffix: true,
                   })}
@@ -140,7 +149,7 @@ export default function TweetFeed() {
                 <button
                   onClick={() => handleLike(tweet.id)}
                   className={`flex items-center space-x-1 ${
-                    tweet.likes.some((like) => like.userId === session?.user.id)
+                    tweet.likes.some((like) => like.userId === userId)
                       ? "text-red-500"
                       : "text-gray-500"
                   }`}
@@ -172,7 +181,7 @@ export default function TweetFeed() {
                   </svg>
                   <span>{tweet.comments.length}</span>
                 </button>
-                {tweet.author.id === session?.user?.id && (
+                {tweet.author.id === userId && (
                   <button
                     className="absolute bottom-3 right-3 text-zinc-400 hover:text-red-500"
                     onClick={() => handleDelete(tweet.id)}

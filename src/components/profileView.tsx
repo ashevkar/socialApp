@@ -2,6 +2,7 @@
 import { VscAccount } from "react-icons/vsc";
 import { useEffect, useState } from "react";
 import LoadingPage from "./LoadingPage";
+import { IoMdColorWand } from "react-icons/io";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState({
@@ -16,6 +17,12 @@ export default function ProfilePage() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [sidebarColor, setSidebarColor] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('sidebarColor') || 'bg-white';
+    }
+    return 'bg-white';
+  });
 
   useEffect(() => {
     async function fetchProfile() {
@@ -29,6 +36,12 @@ export default function ProfilePage() {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('sidebarColor', sidebarColor);
+      window.dispatchEvent(new Event('sidebarColorChanged'));
+    }
+  }, [sidebarColor]);
 
   const handlePasswordChange = async () => {
     if (newPassword !== confirmPassword) {
@@ -58,9 +71,11 @@ export default function ProfilePage() {
 
   return (
     <div className="font-sans font-bold m-4 p-6 bg-white rounded-2xl text-black shadow-lg">
+      
         <h1 className="text-3xl font-black italic mb-2">SETTINGS</h1>
         <p className="text-lg text-gray-500 mb-6"> Customize your Orkut experience!</p>
-      <div className="flex items-center space-x-4 mb-6 mt-6">
+        <div className="border-4 rounded-2xl p-6">
+      <div className="flex items-center space-x-4 mb-6  ">
         
         {/* {profile.profileImage ? (
           <img
@@ -90,7 +105,7 @@ export default function ProfilePage() {
         <p className="text-gray-700">{profile.email}</p>
       </div>
       <button
-        className="w-50 rounded-xl p-2  custom-border  hover:bg-blue-500  "
+        className="w-50 rounded-xl p-2  custom-border  hover:bg-amber-400  "
         onClick={() => setShowPasswordForm(true)}
       >
         Change Password
@@ -138,8 +153,43 @@ export default function ProfilePage() {
             Cancel
           </button>
           </div>
-        </div>
+          </div>
+       
       )}
+       </div>
+            <div className="border-4 rounded-2xl p-2 mt-2 ">
+        <div className="flex p-3 gap-3 items-center font-extrabold ">
+        <div>
+            <IoMdColorWand
+            className="text-3xl text-rose-500" />
+          </div>
+          <div>
+            <h1 className="text-xl font-black italic ">APPEARANCE</h1>
+          </div>
+
+          </div>
+          <p className="text-lg text-zinc-700 mt-2 pl-4"> Color Theme</p>
+
+          {/* Color Theme Selector */}
+          <div className="flex gap-3 p-3">
+            {[
+              { name: 'Red', value: 'bg-rose-500' },
+              { name: 'Yellow', value: 'bg-amber-400' },
+              { name: 'Blue', value: 'bg-blue-500' },
+              { name: 'Green', value: 'bg-green-500' },
+              { name: 'Purple', value: 'bg-purple-500' },
+            ].map((color) => (
+              <button
+                key={color.value}
+                className={`w-30 h-8 rounded-2xl border-0.5 focus:outline-none focus:ring-2.5 focus:ring-black ${color.value} ${sidebarColor === color.value ? 'ring-2 ring-black' : ''}`}
+                onClick={() => setSidebarColor(color.value)}
+                aria-label={`Set sidebar color to ${color.name}`}
+              />
+            ))}
+          </div>
+          <p className="text-xs text-gray-500 px-3 pb-2">Sidebar color will update next time you visit the main page.</p>
+          </div>
     </div>
+   
   );
 }

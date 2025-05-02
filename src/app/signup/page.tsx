@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
+
 
 export default function SignupPage() {
   const [name, setName] = useState("");
@@ -47,15 +49,40 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Create your account
-        </h2>
+    <div className=" min-h-screen  items-center bg-gray-50 flex justify-between flex-row ">
+       <div className="w-1/2 min-h-screen bg-gradient-to-t to-blue-50  from-pink-300 rounded-xl mr-5 m-4">
+        <Image
+          src="/login1.png"
+          alt="loginPage"
+          width={600}
+          height={200}
+          className="relative left-10"
+        />
+        <div className="flex flex-col text-right p-8 ">
+          <h2 className="text-3xl ml-40 font-extrabold text-gray-900 mb-4">
+          &quot;Reconnect with Friends Like Never Before&quot;
+          </h2>
+          <p className="text-gray-700 text-lg leading-relaxed pl-30">
+            The most beloved social network is making a comeback! Share
+            testimonials, send messages, and relive the joy of genuine
+            connections—all in one place.
+          </p>
+        </div>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+     
+
+      <div className="  flex justify-center w-1/2 bg-gray-50 pb-9 ">
+      <div className="w-2/3 custom-outline p-10">
+      <div className=" pb-3 m-3">
+        <h2 className=" pb-2 text-3xl font-black italic text-gray-900 ">
+          Create your account
+        </h2>
+
+        <p className="text-gray-500">Enter your details below to continue.</p>
+
+      </div>
+        <div className=" bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6 text-zinc-600" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
@@ -128,7 +155,7 @@ export default function SignupPage() {
             <div>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="custom-border w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-500 hover:bg-purple-700 "
               >
                 Sign up
               </button>
@@ -150,13 +177,14 @@ export default function SignupPage() {
             <div className="mt-6">
               <Link
                 href="/login"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className=" custom-border w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-purple-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Sign in
               </Link>
             </div>
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

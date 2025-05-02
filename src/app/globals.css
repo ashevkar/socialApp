@@ -29,12 +29,20 @@ body {
 }
 .custom-border {
   @apply border-r-6 border-b-6 border-2 rounded-xl border-black duration-300;
-  
 }
 .custom-border:hover {
-  @apply border-r-4 border-b-4 text-amber-50;
+  @apply border-r-4 border-b-4 ;
+}
+.custom-outline {
+  @apply  border-2 rounded-lg border-black transition-transform duration-300;
+  box-shadow: 9px 9px 0 0 black;
+
+
 }
 
+.custom-outline:hover {
+  @apply -translate-y-0.5;
+}
 /* LoadingIcon.css */
 .loading-container {
   display: flex;

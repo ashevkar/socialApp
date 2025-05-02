@@ -2,10 +2,12 @@
 
 import { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import TweetFeed from './TweetFeed';
 
 export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () => void }) {
   const [content, setContent] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState<'recent' | 'mySeries'>('recent');
   const { data: session } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -35,17 +37,32 @@ export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () =>
 
   return (
     <div className="w-full text-black  mt-6 mb-3">
-      {/* 🟡 Manga Feed Header */}
+      {/* Orkut Feed Header */}
       <div className="text-center mb-4">
-        <h1 className="text-3xl font-bold tracking-tighter italic">ORKUT FEED</h1>
-        <div className="mt-3 flex justify-center border-2 border-black rounded-xl overflow-hidden max-w-sm mx-auto">
-          <button className="bg-pink-400 text-white font-semibold px-6 py-2 border-r-2 border-black">⚡ Popular</button>
-          <button className="text-gray-800 font-semibold px-6 py-2 bg-white">☆ My Series</button>
+        <h1 className="text-3xl font-black italic mb-2">ORKUT FEED</h1>
+        <div className="mt-3 text-lg flex border-2 border-black rounded-lg overflow-hidden ">
+          <button
+            className={`w-1/2 font-bold m-0.5 rounded-lg border-black ${selectedTab === 'recent' ? 'bg-rose-500 text-white' : 'text-zinc-600 bg-white'}`}
+            onClick={() => setSelectedTab('recent')}
+            type="button"
+          >
+            ⚡ Recent Tweets
+          </button>
+          
+          <button
+            className={`w-1/2 font-semibold m-0.5 py-1.5 rounded-lg border-black ${selectedTab === 'mySeries' ? 'bg-blue-400 text-white' : 'text-zinc-600 bg-white'}`}
+            onClick={() => setSelectedTab('mySeries')}
+            type="button"
+          >
+            ☆ My Series
+          </button>
         </div>
       </div>
+      
+      <hr className=" h-1.5 p-0 border-0  md:my-4 bg-black" />
 
       {/* 📝 Post Form */}
-      <div className="custom-border bg-white text-black p-4 rounded-xl shadow-md border-2 border-black">
+      <div className="border-r-10 border-b-10 bg-white text-black p-4 rounded-xl shadow-md border-2 mb-4">
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="flex items-start gap-3">
             {/* Avatar */}
@@ -61,9 +78,9 @@ export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () =>
 
               {/* Textarea */}
               <textarea
-                className="w-full mt-3 p-3 border-2 border-black rounded-xl bg-gray-100 focus:outline-none"
+                className="w-full mt-3 p-3 border-2 border-black rounded-xl bg-gray-100 text-black focus:outline-none"
                 rows={3}
-                placeholder="What's happening in your manga world?"
+                placeholder="What's happening in your orkut world?"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 disabled={isLoading}
@@ -92,6 +109,8 @@ export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () =>
           </div>
         </form>
       </div>
+      {/* Render TweetFeed below the form */}
+      <TweetFeed tab={selectedTab} />
     </div>
   );
 }

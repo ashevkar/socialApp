@@ -88,6 +88,15 @@ export default function ProfilePage() {
           </div>
         </div>
         <div className="mb-4 m-2">
+          <label className="block mb-1">Email:- {profile.email}</label>
+          {/* <input
+            className="w-full  px-2 py-1 rounded"
+            name="email"
+            value={profile.email}
+            disabled
+          /> */}
+        </div>
+        <div className="mb-4 m-2">
           <label className="block mb-1">Name</label>
           <input
             className="w-full border px-2 py-1 rounded"
@@ -97,15 +106,7 @@ export default function ProfilePage() {
             disabled={!edit}
           />
         </div>
-        <div className="mb-4 m-2">
-          <label className="block mb-1">Email</label>
-          <input
-            className="w-full border px-2 py-1 rounded"
-            name="email"
-            value={profile.email}
-            disabled
-          />
-        </div>
+       
         <div className="mb-4 m-2">
           <label className="block mb-1">Username</label>
           <input
@@ -135,24 +136,14 @@ export default function ProfilePage() {
           </button>
         ) : (
           <button
-            className="custom-border flex items-center gap-4 w-full p-2 text-black  justify-center mb-3"
+            className="custom-border flex items-center gap-4 w-full p-2 text-black hover:bg-blue-500 justify-center mb-3"
             onClick={() => setEdit(true)}
           >
             Edit
           </button>
         )}
       </div>
-      {/* <div className="border-4 rounded-2xl p-2 mt-2 ">
-        <div className="flex p-3 gap-3 items-center font-extrabold font-display">
-        <div>
-            <IoMdColorWand
-            className="text-3xl text-rose-500" />
-          </div>
-          <div>
-            <p>APPEARANCE</p>
-          </div>
-          </div>
-          </div> */}
+
     </div>
   );
 }

@@ -1,8 +1,6 @@
 "use client";
-// import Link from "next/link";
-import { useState} from "react";
+import { useState, useEffect } from "react";
 import CreateTweet from "@/components/CreateTweet";
-import TweetFeed from "@/components/TweetFeed";
 import Settings from "@/components/profileView";
 import NotificationPage from "@/components/NotificationPage";
 import { FiHome, FiSearch } from "react-icons/fi";
@@ -13,20 +11,65 @@ import { signOut } from "next-auth/react";
 import { FiLogOut } from "react-icons/fi";
 import { IconType } from "react-icons";
 import Profile from "@/app/profile/page";
-// import { useSession } from "next-auth/react";
+
+type Tweet = {
+  id: string;
+  content: string;
+};
+
+type User = {
+  id: string;
+  username: string;
+};
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
-  // const { data: session } = useSession();
-  // const [taggedTweets, setTaggedTweets] = useState<Tweet[]>([]);
+  const [allTweets, setAllTweets] = useState<Tweet[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<{tweets: Tweet[], users: User[]} | null>(null);
+  const [sidebarColor, setSidebarColor] = useState('bg-white');
 
-  // useEffect(() => {
-  //   if (activeTab === "notifications" && session?.user?.username) {
-  //     fetch(`/api/tweets/tagged?username=${session.user.username}`)
-  //       .then((res) => res.json())
-  //       .then(setTaggedTweets);
-  //   }
-  // }, [activeTab, session]);
+  useEffect(() => {
+    // Replace with your actual fetch logic
+    fetch('/api/tweets').then(res => res.json()).then(setAllTweets);
+    fetch('/api/users').then(res => res.json()).then(setAllUsers);
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const storedColor = localStorage.getItem('sidebarColor');
+      if (storedColor) setSidebarColor(storedColor);
+
+      // Listen for sidebarColorChanged event
+      const handler = () => {
+        const newColor = localStorage.getItem('sidebarColor') || 'bg-white';
+        setSidebarColor(newColor);
+      };
+      window.addEventListener('sidebarColorChanged', handler);
+      return () => window.removeEventListener('sidebarColorChanged', handler);
+    }
+  }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+
+    if (value.trim().length === 0) {
+      setSearchResults(null);
+      return;
+    }
+
+    // Simple case-insensitive search
+    const filteredTweets = allTweets.filter(tweet =>
+      tweet.content.toLowerCase().includes(value.toLowerCase())
+    );
+    const filteredUsers = allUsers.filter(user =>
+      user.username.toLowerCase().includes(value.toLowerCase())
+    );
+
+    setSearchResults({ tweets: filteredTweets, users: filteredUsers });
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -34,7 +77,6 @@ export default function Home() {
         return (
           <>
             <CreateTweet />
-            <TweetFeed />
           </>
         );
       case "explore":
@@ -68,7 +110,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen">
       {/* Left Sidebar */}
-      <div className="w-64 h-screen sticky top-0 border-r border-gray-200 md:flex flex-col justify-between p-2">
+      <div className="w-64 h-screen sticky top-0 border-r border-gray-200 md:flex flex-col justify-between p-2 bg-white">
         <aside className="hidden md:block">
           <div className="text-4xl font-bold m-4 text-start">Orkut</div>
           <nav className="flex flex-col text-md p-2 ">
@@ -78,30 +120,35 @@ export default function Home() {
                 Icon={FiHome}
                 setActiveTab={() => setActiveTab("home")}
                 active={activeTab === "home"}
+                sidebarColor={sidebarColor}
               />
               <SidebarButton
                 label="Explore"
                 Icon={FiSearch}
                 setActiveTab={() => setActiveTab("explore")}
                 active={activeTab === "explore"}
+                sidebarColor={sidebarColor}
               />
               <SidebarButton
                 label="Notifications"
                 Icon={IoMdNotificationsOutline}
                 setActiveTab={() => setActiveTab("notifications")}
                 active={activeTab === "notifications"}
+                sidebarColor={sidebarColor}
               />
               <SidebarButton
                 label="Profile"
                 Icon={CiUser}
                 setActiveTab={() => setActiveTab("profile")}
                 active={activeTab === "profile"}
+                sidebarColor={sidebarColor}
               />
               <SidebarButton
                 label="Settings"
                 Icon={IoSettingsOutline}
                 setActiveTab={() => setActiveTab("settings")}
                 active={activeTab === "settings"}
+                sidebarColor={sidebarColor}
               />
 
               {/* Bottom Logout Button */}
@@ -148,12 +195,36 @@ export default function Home() {
         <div className="w-auto h-screen border-x border-gray-200 sticky top-0 hidden lg:flex flex-col p-2 space-y-4 overflow-y-auto">
           <aside className="p-2 hidden lg:block">
             {/* Search */}
-            <div className="mb-6">
+            <div className="mb-6 relative">
               <input
                 type="text"
-                placeholder="Search"
+                placeholder="Search tweets or users"
                 className="w-full rounded-full bg-gray-100 p-3 px-5 outline-none"
+                value={searchQuery}
+                onChange={handleSearch}
               />
+              {searchResults && (
+                <div className="absolute left-0 right-0 bg-white border rounded-xl mt-2 z-10 max-h-64 overflow-y-auto shadow-lg">
+                  <div className="p-2">
+                    <div className="font-bold text-gray-700">Users</div>
+                    {searchResults.users.length === 0 && <div className="text-gray-400 text-sm">No users found</div>}
+                    {searchResults.users.map((user) => (
+                      <div key={user.id} className="p-2 hover:bg-gray-100 rounded cursor-pointer">
+                        @{user.username}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="border-t p-2">
+                    <div className="font-bold text-gray-700">Tweets</div>
+                    {searchResults.tweets.length === 0 && <div className="text-gray-400 text-sm">No tweets found</div>}
+                    {searchResults.tweets.map((tweet) => (
+                      <div key={tweet.id} className="p-2 hover:bg-gray-100 rounded cursor-pointer">
+                        {tweet.content}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Trends */}
@@ -171,26 +242,34 @@ export default function Home() {
   );
 }
 
+type SidebarButtonProps = {
+  label: string;
+  Icon: IconType;
+  setActiveTab: () => void;
+  active: boolean;
+  notificationCount?: number;
+  sidebarColor: string;
+};
+
 function SidebarButton({
   label,
   Icon,
   setActiveTab,
   active,
   notificationCount = 0,
-}: {
-  label: string;
-  Icon: IconType;
-  setActiveTab: () => void;
-  active: boolean;
-  notificationCount?: number;
-}) {
+  sidebarColor,
+}: SidebarButtonProps) {
+  // Determine text color for contrast
+  const isLight = sidebarColor === 'bg-white' || sidebarColor === 'bg-amber-400';
+  const activeClass = active ? `${sidebarColor} ${isLight ? 'text-black' : 'text-white'} custom-border` : '';
   return (
     <button
       onClick={setActiveTab}
       className={`flex items-center gap-4 w-full rounded-xl p-2 
-        ${active ? "bg-rose-500 text-white custom-border" : ""}
-        hover:bg-rose-500 hover:text-amber-50 
+        ${activeClass}
+        hover:${sidebarColor} 
         border-black relative`}
+      style={active ? { fontWeight: 700 } : {}}
     >
       <Icon className="text-lg" />
       <span className="text-md font-semibold">{label}</span>
