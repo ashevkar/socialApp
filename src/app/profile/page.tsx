@@ -99,7 +99,7 @@ export default function ProfilePage() {
         <div className="mb-4 m-2">
           <label className="block mb-1">Name</label>
           <input
-            className="w-full border px-2 py-1 rounded"
+            className="w-full border px-2 py-1 rounded font-medium"
             name="name"
             value={profile.name}
             onChange={handleChange}
@@ -110,7 +110,7 @@ export default function ProfilePage() {
         <div className="mb-4 m-2">
           <label className="block mb-1">Username</label>
           <input
-            className="w-full border px-2 py-1 rounded"
+            className="w-full border px-2 py-1 rounded font-medium"
             name="username"
             value={profile.username}
             onChange={handleChange}
@@ -120,23 +120,24 @@ export default function ProfilePage() {
         <div className="mb-4 m-2">
           <label className="block mb-1">Bio</label>
           <textarea
-            className="w-full border px-2 py-1 rounded"
+            className="w-full border px-2 py-1 rounded placeholder-gray-400 font-medium"
             name="bio"
-            value={profile.bio}
+            value={profile.bio ?? ''}
             onChange={handleChange}
             disabled={!edit}
+            placeholder="Tell us a bit about yourself..."
           />
         </div>
         {edit ? (
           <button
-            className="custom-border flex items-center gap-4 w-full p-2 bg-blue-500 text-amber-50 justify-center mb-3"
+            className="custom-border flex items-center gap-4 w-full p-2 bg-blue-500 text-amber-50 justify-center mb-3 "
             onClick={handleSave}
           >
             Save
           </button>
         ) : (
           <button
-            className="custom-border flex items-center gap-4 w-full p-2 text-black hover:bg-blue-500 justify-center mb-3"
+            className="custom-border flex items-center gap-4 w-full p-2 text-black hover:bg-blue-500 justify-center mb-3 hover:text-white"
             onClick={() => setEdit(true)}
           >
             Edit

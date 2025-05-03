@@ -37,41 +37,42 @@ export default function LoginPage() {
   };
 
   return (
-    <div className=" min-h-screen  items-center bg-gray-50 flex justify-between flex-row ">
+    <div className=" min-h-screen h-full flex flex-col md:flex-row  bg-gray-50">
       {/* Left Side - Centered Image */}
-      <div className="w-1/2 min-h-screen bg-gradient-to-t to-blue-50  from-pink-300 rounded-xl mr-5 m-4">
-        <Image
-          src="/login1.png"
-          alt="loginPage"
-          width={600}
-          height={200}
-          className="relative left-10"
-        />
-        <div className="flex flex-col text-right p-8 ">
-          <h2 className="text-3xl ml-40 font-extrabold text-gray-900 mb-4">
-          &quot;Reconnect with Friends Like Never Before&quot;
-          </h2>
-          <p className="text-gray-700 text-lg leading-relaxed pl-30">
-            The most beloved social network is making a comeback! Share
-            testimonials, send messages, and relive the joy of genuine
-            connections—all in one place.
-          </p>
-        </div>
-      </div>
+      <div className="hidden md:flex md:w-1/2 h-screen sticky  bg-gradient-to-t to-blue-300 from-pink-300 pr-5">
+  <div className="flex flex-col md:mx-auto w-full text-right items-center">
+    <Image
+      src="/login2.png"
+      alt="loginPage"
+      width={450}
+      height={100}
+      className=""
+    />
+    <div className="flex flex-col gap-5">
+      <h2 className="text-xl font-black italic text-gray-900">
+        &quot;Reconnect with Friends Like Never Before&quot;
+      </h2>
+      <p className="text-gray-600 text-sm">
+        The most beloved social network is making a comeback! Share testimonials, send messages, and relive the joy of genuine connections—all in one place.
+      </p>
+    </div>
+  </div>
+</div>
+
 
       {/* Right Side - Sign In */}
-      <div className="flex justify-center w-1/2 bg-gray-50 pb-9 ">
-      <div className="w-2/3 custom-outline p-10">
-        <h1 className="text-5xl font-black text-pink-600">Orkut</h1>
+      <div className=" flex justify-center md:w-1/2 m-5 md:m-4 bg-gray-50 items-center">
+      <div className="custom-outline md:w-2/3 p-5">
+        <h1 className="text-4xl font-black text-pink-600">Orkut</h1>
         <div className="">
-          <h2 className="mt-6 mb-2 text-3xl font-black italic text-gray-900">
+          <h2 className="mt-2  text-xl font-black italic text-gray-900">
             Sign in to your account
           </h2>
-          <p className="text-gray-500">Enter your details below to continue.</p>
+          {/* <p className="text-gray-500">Enter your details below to continue.</p> */}
         </div>
 
-        <div className="mt-6  rounded-xl ">
-          <div className="bg-white py-10  shadow sm:rounded-lg sm:px-5">
+        <div className="mt-2  rounded-xl ">
+          <div className="bg-white py-3  shadow sm:rounded-lg sm:px-5">
             <form className="space-y-6 text-gray-700" onSubmit={handleSubmit}>
               {error && (
                 <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">

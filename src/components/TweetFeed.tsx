@@ -126,7 +126,7 @@ export default function TweetFeed({ tab }: { tab: 'popular' | 'mySeries' }) {
           <div className="flex items-start space-x-3">
             <div className="flex-shrink-0">
               <Image
-                src={tweet.author.profileImage || "/default-avatar.jpg"}
+                src={tweet.author.profileImage || "/avtar.jpg"}
                 alt={tweet.author.name}
                 width={40}
                 height={40}

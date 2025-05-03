@@ -28,7 +28,7 @@ export default function Home() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<{tweets: Tweet[], users: User[]} | null>(null);
-  const [sidebarColor, setSidebarColor] = useState('bg-white');
+  const [sidebarColor, setSidebarColor] = useState('bg-purple-500');
 
   useEffect(() => {
     // Replace with your actual fetch logic
@@ -43,7 +43,7 @@ export default function Home() {
 
       // Listen for sidebarColorChanged event
       const handler = () => {
-        const newColor = localStorage.getItem('sidebarColor') || 'bg-white';
+        const newColor = localStorage.getItem('sidebarColor') || 'bg-purple-500';
         setSidebarColor(newColor);
       };
       window.addEventListener('sidebarColorChanged', handler);

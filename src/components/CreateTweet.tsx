@@ -1,13 +1,20 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import TweetFeed from './TweetFeed';
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import TweetFeed from "./TweetFeed";
+import Image from "next/image";
 
-export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () => void }) {
-  const [content, setContent] = useState('');
+export default function CreateTweet({
+  onTweetCreated,
+}: {
+  onTweetCreated?: () => void;
+}) {
+  const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState<'recent' | 'mySeries'>('recent');
+  const [selectedTab, setSelectedTab] = useState<"recent" | "mySeries">(
+    "recent"
+  );
   const { data: session } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,20 +23,20 @@ export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () =>
 
     setIsLoading(true);
     try {
-      const res = await fetch('/api/tweets', {
-        method: 'POST',
+      const res = await fetch("/api/tweets", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ content }),
       });
 
-      if (!res.ok) throw new Error('Failed to create tweet');
+      if (!res.ok) throw new Error("Failed to create tweet");
 
-      setContent('');
+      setContent("");
       if (onTweetCreated) onTweetCreated();
     } catch (error) {
-      console.error('Error creating tweet:', error);
+      console.error("Error creating tweet:", error);
     } finally {
       setIsLoading(false);
     }
@@ -42,23 +49,31 @@ export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () =>
         <h1 className="text-3xl font-black italic mb-2">ORKUT FEED</h1>
         <div className="mt-3 text-lg flex border-2 border-black rounded-lg overflow-hidden ">
           <button
-            className={`w-1/2 font-bold m-0.5 rounded-lg border-black ${selectedTab === 'recent' ? 'bg-rose-500 text-white' : 'text-zinc-600 bg-white'}`}
-            onClick={() => setSelectedTab('recent')}
+            className={`w-1/2 font-bold m-0.5 rounded-lg border-black ${
+              selectedTab === "recent"
+                ? "bg-rose-500 text-white"
+                : "text-zinc-600 bg-white"
+            }`}
+            onClick={() => setSelectedTab("recent")}
             type="button"
           >
             ⚡ Recent Tweets
           </button>
-          
+
           <button
-            className={`w-1/2 font-semibold m-0.5 py-1.5 rounded-lg border-black ${selectedTab === 'mySeries' ? 'bg-blue-400 text-white' : 'text-zinc-600 bg-white'}`}
-            onClick={() => setSelectedTab('mySeries')}
+            className={`w-1/2 font-semibold m-0.5 py-1.5 rounded-lg border-black ${
+              selectedTab === "mySeries"
+                ? "bg-blue-400 text-white"
+                : "text-zinc-600 bg-white"
+            }`}
+            onClick={() => setSelectedTab("mySeries")}
             type="button"
           >
             ☆ My Series
           </button>
         </div>
       </div>
-      
+
       <hr className=" h-1.5 p-0 border-0  md:my-4 bg-black" />
 
       {/* 📝 Post Form */}
@@ -66,8 +81,14 @@ export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () =>
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="flex items-start gap-3">
             {/* Avatar */}
-            <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-black">
-              <img src="/avatar-placeholder.png" alt="avatar" className="w-full h-full object-cover" />
+            <div className="w-12 h-12 rounded-full overflow-hidden border-0 border-black">
+              <Image
+                src="/avtar.jpg"
+                width={40}
+                height={40}
+                alt="avatar"
+                className="w-full h-full object-cover"
+              />
             </div>
 
             <div className="flex-1 relative">
@@ -87,25 +108,25 @@ export default function CreateTweet({ onTweetCreated }: { onTweetCreated?: () =>
               />
             </div>
           </div>
-          <div className='flex justify-between'>
-          {/* Icons Row */}
-          <div className="flex justify-start gap-6 mt-4 px-3">
-            <IconButton icon="🖼️" />
-            <IconButton icon="😊" />
-            <IconButton icon="📅" />
-            <IconButton icon="📍" />
-          </div>
+          <div className="flex justify-between">
+            {/* Icons Row */}
+            <div className="flex justify-start gap-6 mt-4 px-3">
+              <IconButton icon="🖼️" />
+              <IconButton icon="😊" />
+              <IconButton icon="📅" />
+              <IconButton icon="📍" />
+            </div>
 
-          {/* Submit Button */}
-          <div className="flex justify-end mt-4">
-            <button
-              type="submit"
-              disabled={isLoading || !content.trim()}
-              className="custom-border bg-blue-500 text-white px-6 py-2 rounded-xl shadow-md font-bold border-2 border-black hover:bg-pink-400 disabled:opacity-50"
-            >
-              {isLoading ? 'Posting...' : 'SHARE!'}
-            </button>
-          </div>
+            {/* Submit Button */}
+            <div className="flex justify-end mt-4">
+              <button
+                type="submit"
+                disabled={isLoading || !content.trim()}
+                className="custom-border bg-blue-500 text-white px-6 py-2 rounded-xl shadow-md font-bold border-2 border-black hover:bg-pink-400 disabled:opacity-50"
+              >
+                {isLoading ? "Posting..." : "SHARE!"}
+              </button>
+            </div>
           </div>
         </form>
       </div>

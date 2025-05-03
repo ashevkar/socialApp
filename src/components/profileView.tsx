@@ -1,8 +1,9 @@
 "use client";
-import { VscAccount } from "react-icons/vsc";
+// import { VscAccount } from "react-icons/vsc";
 import { useEffect, useState } from "react";
 import LoadingPage from "./LoadingPage";
 import { IoMdColorWand } from "react-icons/io";
+import Image from "next/image";
 
 export default function ProfilePage() {
   const [profile, setProfile] = useState({
@@ -19,9 +20,9 @@ export default function ProfilePage() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [sidebarColor, setSidebarColor] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem('sidebarColor') || 'bg-white';
+      return localStorage.getItem('sidebarColor') || 'bg-purple-500';
     }
-    return 'bg-white';
+    return 'bg-purple-500';
   });
 
   useEffect(() => {
@@ -77,22 +78,28 @@ export default function ProfilePage() {
         <div className="border-4 rounded-2xl p-6">
       <div className="flex items-center space-x-4 mb-6  ">
         
-        {/* {profile.profileImage ? (
-          <img
+        {profile.profileImage ? (
+          <Image
             src={profile.profileImage}
             alt="Profile"
+            width={30}
+            height={30}
             className="w-20 h-20 rounded-full border-2 border-black"
           />
         ) : (
           <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center border-2 border-black text-4xl">
-            <VscAccount />
+            <Image
+            src="/avtar.jpg"
+            alt="Profile"
+            width={30}
+            height={30}
+            className="w-20 h-20 rounded-full border-2 border-black"
+          />
           </div>
-        )} */}
-        <div className="w-20 h-20 rounded-full bg-gray-200 flex items-center justify-center border-2 border-black text-4xl">
-            <VscAccount />
-          </div>
+        )}
+       
         <div>
-          <h2 className="text-2xl font-bold">{profile.name}</h2>
+          <h2 className="text-2xl font-bold">{profile.name.charAt(0).toUpperCase() + profile.name.slice(1)}</h2>
           <p className="text-gray-600">@{profile.username}</p>
         </div>
       </div>
@@ -147,7 +154,7 @@ export default function ProfilePage() {
             Save Password
           </button>
           <button
-        className="custom-border w-50  p-2  hover:bg-zinc-500 "
+        className="custom-border w-50  p-2  hover:bg-zinc-500 hover:text-white"
         onClick={() => setShowPasswordForm(false)}
           >
             Cancel
