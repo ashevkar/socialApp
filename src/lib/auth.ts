@@ -5,6 +5,35 @@ import bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
+// Define the user type with username property
+type UserWithUsername = {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  username: string;
+};
+
+// Extend the session types
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      username: string;
+    }
+  }
+}
+
+// Extend the JWT type
+declare module "next-auth/jwt" {
+  interface JWT {
+    id?: string;
+    username?: string;
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -61,7 +90,7 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      if (token) {
+      if (token && session.user) {
         session.user.id = token.id as string;
         session.user.username = token.username as string;
       }

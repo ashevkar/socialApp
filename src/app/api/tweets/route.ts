@@ -5,6 +5,13 @@ import { authOptions } from '@/lib/auth';
 
 const prisma = new PrismaClient();
 
+// Add proper types for NextAuth session
+type SessionUserWithId = {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+};
 
 // GET all tweets
 export async function GET() {
@@ -73,7 +80,7 @@ export async function POST(req: Request) {
       data: {
         content,
         image,
-        authorId: session.user.id,
+        authorId: (session.user as SessionUserWithId).id,
       },
       include: {
         author: {

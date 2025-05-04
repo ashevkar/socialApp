@@ -33,7 +33,7 @@ type Tweet = {
   }[];
 };
 
-export default function TweetFeed({ tab }: { tab: 'popular' | 'mySeries' }) {
+export default function TweetFeed({ tab }: { tab: 'popular' | 'mySeries' | 'recent' }) {
   // console.log('TweetFeed mounted');
 
   const [tweets, setTweets] = useState<Tweet[]>([]);
@@ -118,6 +118,7 @@ export default function TweetFeed({ tab }: { tab: 'popular' | 'mySeries' }) {
   } else if (tab === 'popular') {
     displayedTweets = [...tweets].sort((a, b) => b.likes.length - a.likes.length);
   }
+  // For 'recent' tab, we'll use the default order (which is already by createdAt desc)
 
   return (
     <div className="space-y-4">

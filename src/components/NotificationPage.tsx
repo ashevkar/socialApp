@@ -5,6 +5,40 @@ import { useSession } from "next-auth/react";
 // import { Tweet } from "@/types/Tweet"; // Adjust path if needed
 import Image from "next/image";
 
+// Define the session user type
+type SessionUser = {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  username?: string;
+};
+
+type Tweet = {
+  id: string;
+  content: string;
+  createdAt: string;
+  author: {
+    id: string;
+    name: string;
+    username: string;
+    profileImage: string | null;
+  };
+  likes: {
+    id: string;
+    userId: string;
+  }[];
+  comments: {
+    id: string;
+    content: string;
+    user: {
+      id: string;
+      name: string;
+      username: string;
+    };
+  }[];
+};
+
 type LikeNotification = {
   id: string;
   user: { name?: string; username: string };
@@ -28,8 +62,8 @@ export default function NotificationPage() {
   }, []);
 
   useEffect(() => {
-    if (session?.user?.username) {
-      fetch(`/api/tweets/tagged?username=${session.user.username}`)
+    if (session?.user && (session.user as SessionUser).username) {
+      fetch(`/api/tweets/tagged?username=${(session.user as SessionUser).username}`)
         .then((res) => res.json())
         .then(setTaggedTweets);
     }

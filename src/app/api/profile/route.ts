@@ -13,6 +13,7 @@ export async function GET() {
   const user = await prisma.user.findUnique({
     where: { email: session.user.email },
     select: {
+      id: true,
       name: true,
       email: true,
       username: true,
@@ -38,6 +39,7 @@ export async function PUT(req: NextRequest) {
     where: { email: session.user.email },
     data: { name, username, bio, profileImage },
     select: {
+      id: true,
       name: true,
       email: true,
       username: true,

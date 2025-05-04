@@ -1,11 +1,15 @@
 "use client";
 import { VscAccount } from "react-icons/vsc";
-import { useEffect, useState } from "react";
+import { useEffect, useState, ChangeEvent } from "react";
 import LoadingPage from "@/components/LoadingPage";
+import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 // import { IoMdColorWand } from "react-icons/io";
 
 export default function ProfilePage() {
+  const router = useRouter();
   const [profile, setProfile] = useState({
+    id: "",
     name: "",
     email: "",
     username: "",
@@ -14,6 +18,7 @@ export default function ProfilePage() {
   });
   const [loading, setLoading] = useState(true);
   const [edit, setEdit] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     async function fetchProfile() {
@@ -27,7 +32,7 @@ export default function ProfilePage() {
     fetchProfile();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setProfile({ ...profile, [e.target.name]: e.target.value });
   };
 
@@ -53,6 +58,33 @@ export default function ProfilePage() {
       setEdit(false);
     } else {
       alert("Failed to update profile.");
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      setIsDeleting(true);
+      try {
+        const res = await fetch(`/api/user/${profile.id}`, {
+          method: "DELETE"
+        });
+        
+        if (res.ok) {
+          alert("Your account has been deleted successfully");
+          // Sign out the user before redirecting
+          await signOut({ redirect: false });
+          // Redirect to login page
+          router.push("/login");
+        } else {
+          const error = await res.json();
+          alert(`Failed to delete account: ${error.error || "Unknown error"}`);
+        }
+      } catch (error) {
+        alert("An error occurred while deleting your account");
+        console.error(error);
+      } finally {
+        setIsDeleting(false);
+      }
     }
   };
 
@@ -88,7 +120,7 @@ export default function ProfilePage() {
           </div>
         </div>
         <div className="mb-4 m-2">
-          <label className="block mb-1">Email:- {profile.email}</label>
+          <label className="block mb-1">Email:- {profile?.email || ''}</label>
           {/* <input
             className="w-full  px-2 py-1 rounded"
             name="email"
@@ -101,7 +133,7 @@ export default function ProfilePage() {
           <input
             className="w-full border px-2 py-1 rounded font-medium"
             name="name"
-            value={profile.name}
+            value={profile?.name || ''}
             onChange={handleChange}
             disabled={!edit}
           />
@@ -112,7 +144,7 @@ export default function ProfilePage() {
           <input
             className="w-full border px-2 py-1 rounded font-medium"
             name="username"
-            value={profile.username}
+            value={profile?.username || ''}
             onChange={handleChange}
             disabled={!edit}
           />
@@ -122,7 +154,7 @@ export default function ProfilePage() {
           <textarea
             className="w-full border px-2 py-1 rounded placeholder-gray-400 font-medium"
             name="bio"
-            value={profile.bio ?? ''}
+            value={profile?.bio ?? ''}
             onChange={handleChange}
             disabled={!edit}
             placeholder="Tell us a bit about yourself..."
@@ -143,6 +175,14 @@ export default function ProfilePage() {
             Edit
           </button>
         )}
+        
+        <button
+          className="custom-border flex items-center gap-4 w-full p-2 bg-red-500 text-white justify-center mt-5"
+          onClick={handleDeleteAccount}
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Deleting Account..." : "Delete Account"}
+        </button>
       </div>
 
     </div>
