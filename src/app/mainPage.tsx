@@ -3,7 +3,8 @@ import { useState, useEffect } from "react";
 import CreateTweet from "@/components/CreateTweet";
 import Settings from "@/components/profileView";
 import NotificationPage from "@/components/NotificationPage";
-import { FiHome, FiSearch } from "react-icons/fi";
+import { FiHome } from "react-icons/fi";
+// import { FiSearch } from "react-icons/fi";
 import { CiUser } from "react-icons/ci";
 import { IoMdNotificationsOutline } from "react-icons/io";
 import { IoSettingsOutline } from "react-icons/io5";
@@ -79,10 +80,10 @@ export default function Home() {
             <CreateTweet />
           </>
         );
-      case "explore":
-        return (
-          <div className="p-4 text-xl font-bold">Explore Page Coming Soon!</div>
-        );
+      // case "explore":
+      //   return (
+      //     <div className="p-4 text-xl font-bold">Explore Page Coming Soon!</div>
+      //   );
       case "notifications":
         return (
           <div className="p-4 text-xl font-bold">
@@ -122,13 +123,13 @@ export default function Home() {
                 active={activeTab === "home"}
                 sidebarColor={sidebarColor}
               />
-              <SidebarButton
+              {/* <SidebarButton
                 label="Explore"
                 Icon={FiSearch}
                 setActiveTab={() => setActiveTab("explore")}
                 active={activeTab === "explore"}
                 sidebarColor={sidebarColor}
-              />
+              /> */}
               <SidebarButton
                 label="Notifications"
                 Icon={IoMdNotificationsOutline}
