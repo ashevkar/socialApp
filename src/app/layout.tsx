@@ -6,8 +6,8 @@ import { AuthProvider } from "@/components/AuthProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Twitter Clone",
-  description: "A Twitter clone built with Next.js and Prisma",
+  title: "Orkut Social Media Platform",
+  description: "Orkut- A Social Media Platform built with Next.js and Prisma",
 };
 
 export default function RootLayout({
