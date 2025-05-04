@@ -10,8 +10,6 @@ export default async function Home() {
     if (!session) {
       redirect("/login");
     }
-  
-    console.log("SESSION:", session);
   return (
     <main className="min-h-screen bg-gray-50">
       <MainPage/>

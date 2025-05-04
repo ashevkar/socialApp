@@ -57,8 +57,8 @@ export default function TweetFeed({ tab }: { tab: 'popular' | 'mySeries' | 'rece
   };
   useEffect(() => {
     fetchTweets();
-    // const interval = setInterval(fetchTweets, 500); // fetch every 5 seconds
-    // return () => clearInterval(interval);
+    const interval = setInterval(fetchTweets, 500); // fetch every 5 seconds
+    return () => clearInterval(interval);
   }, []);
 
   const handleLike = async (tweetId: string) => {
