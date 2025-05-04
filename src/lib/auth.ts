@@ -3,15 +3,8 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 
+// Use a global prisma instance to prevent multiple instances in development
 const prisma = new PrismaClient();
-
-// Define the user type with username property
-type UserWithUsername = {
-  id: string;
-  name?: string | null;
-  email?: string | null;
-  username: string;
-};
 
 // Extend the session types
 declare module "next-auth" {
@@ -23,6 +16,10 @@ declare module "next-auth" {
       image?: string | null;
       username: string;
     }
+  }
+
+  interface User {
+    username?: string;
   }
 }
 
@@ -44,34 +41,39 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          throw new Error('Invalid credentials');
+          return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email
+        try {
+          const user = await prisma.user.findUnique({
+            where: {
+              email: credentials.email
+            }
+          });
+
+          if (!user || !user.password) {
+            return null;
           }
-        });
 
-        if (!user) {
-          throw new Error('Invalid credentials');
+          const isCorrectPassword = await bcrypt.compare(
+            credentials.password,
+            user.password
+          );
+
+          if (!isCorrectPassword) {
+            return null;
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            username: user.username,
+          };
+        } catch (error) {
+          console.error('Auth error:', error);
+          return null;
         }
-
-        const isCorrectPassword = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-
-        if (!isCorrectPassword) {
-          throw new Error('Invalid credentials');
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          username: user.username,
-        };
       }
     })
   ],
@@ -85,7 +87,7 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.username = (user as UserWithUsername).username;
+        token.username = user.username;
       }
       return token;
     },
@@ -96,5 +98,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     }
-  }
+  },
+  debug: process.env.NODE_ENV === 'development',
 }; 
